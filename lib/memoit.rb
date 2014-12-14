@@ -16,7 +16,7 @@ module Memoit
       define_method(name) do |*args, &block|
         return super(*args, &block) if block
         cache = instance_variable_get(ivar_name) || instance_variable_set(ivar_name, {})
-        cache.fetch(args.hash) { cache[args.hash] = super(*args) }
+        cache.fetch(args.hash) { |hash| cache[hash] = super(*args) }
       end
     end
     prepend mod
