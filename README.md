@@ -20,6 +20,10 @@ class Foo
 end
 ```
 
+## Is it any good?
+
+[Yes](https://news.ycombinator.com/item?id=3067434).
+
 ## License
 
 [MIT](License.txt)
