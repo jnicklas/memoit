@@ -10,6 +10,11 @@ describe Memoit do
       memoize def bar(*values)
         rand
       end
+
+      memoize def falsy
+        foo
+        false
+      end
     end
   end
   let(:instance) { klass.new }
@@ -30,6 +35,11 @@ describe Memoit do
 
     it "ignores cache when block given" do
       expect(instance.foo { }).not_to eq(instance.foo { })
+    end
+
+    it "caches falsy values" do
+      expect(instance).to receive(:foo).once
+      expect(instance.falsy).to eq(instance.falsy)
     end
   end
 end
