@@ -17,6 +17,10 @@ class Foo
   memoize def bar(value)
     expensive_calculation(value)
   end
+
+  memoize_class_method def self.baz(value)
+    expensive_calculation(value)
+  end
 end
 ```
 

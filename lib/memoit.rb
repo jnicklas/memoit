@@ -21,6 +21,10 @@ module Memoit
     end
     prepend mod
   end
+
+  def memoize_class_method(name)
+    singleton_class.memoize(name)
+  end
 end
 
 Module.send(:include, Memoit)

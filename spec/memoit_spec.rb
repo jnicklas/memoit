@@ -3,6 +3,10 @@ require "memoit"
 describe Memoit do
   let(:klass) do
     Class.new do
+      memoize_class_method def self.foo
+        rand
+      end
+
       memoize def foo
         rand
       end
@@ -40,6 +44,12 @@ describe Memoit do
     it "caches falsy values" do
       expect(instance).to receive(:foo).once
       expect(instance.falsy).to eq(instance.falsy)
+    end
+  end
+
+  describe ".memoize_class_method" do
+    it "caches result" do
+      expect(klass.foo).to eq(klass.foo)
     end
   end
 end
