@@ -45,6 +45,15 @@ describe Memoit do
       expect(instance).to receive(:foo).once
       expect(instance.falsy).to eq(instance.falsy)
     end
+
+    it "returns the name of the method" do
+      name = nil
+      Class.new do
+        name = memoize def blah
+        end
+      end
+      expect(name).to eq(:blah)
+    end
   end
 
   describe ".memoize_class_method" do

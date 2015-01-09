@@ -20,6 +20,7 @@ module Memoit
       end
     end
     prepend mod
+    name
   end
 
   # Memoize the class method with the given name.
