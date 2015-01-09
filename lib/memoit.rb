@@ -21,6 +21,18 @@ module Memoit
     end
     prepend mod
   end
+
+  # Memoize the class method with the given name.
+  #
+  # @example
+  #   class Foo
+  #     memoize_class_method def self.bar(value)
+  #       expensive_calculation(value)
+  #     end
+  #   end
+  def memoize_class_method(name)
+    singleton_class.memoize(name)
+  end
 end
 
 Module.send(:include, Memoit)
