@@ -30,4 +30,4 @@ end
 
 ## License
 
-[MIT](License.txt)
+[MIT](LICENSE.txt)
