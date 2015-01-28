@@ -11,7 +11,8 @@ module Memoit
   #     end
   #   end
   def memoize(name)
-    ivar_name = "@_memo_#{name}".to_sym
+    ivar_method_name = name.to_s.sub("?", "__questionmark").sub("!", "__bang")
+    ivar_name = "@_memo_#{ivar_method_name}".to_sym
     mod = Module.new do
       define_method(name) do |*args, &block|
         return super(*args, &block) if block

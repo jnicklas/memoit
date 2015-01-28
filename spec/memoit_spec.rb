@@ -19,6 +19,14 @@ describe Memoit do
         foo
         false
       end
+
+      memoize def query?
+        rand
+      end
+
+      memoize def bang!
+        rand
+      end
     end
   end
   let(:instance) { klass.new }
@@ -44,6 +52,14 @@ describe Memoit do
     it "caches falsy values" do
       expect(instance).to receive(:foo).once
       expect(instance.falsy).to eq(instance.falsy)
+    end
+
+    it "handles question-mark methods" do
+      expect(instance.query?).to eq(instance.query?)
+    end
+
+    it "handles bang methods" do
+      expect(instance.bang!).to eq(instance.bang!)
     end
 
     it "returns the name of the method" do
