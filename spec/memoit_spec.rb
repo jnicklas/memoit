@@ -27,6 +27,10 @@ describe Memoit do
       memoize def bang!
         rand
       end
+
+      memoize def ☃
+        rand
+      end
     end
   end
   let(:instance) { klass.new }
@@ -60,6 +64,10 @@ describe Memoit do
 
     it "handles bang methods" do
       expect(instance.bang!).to eq(instance.bang!)
+    end
+
+    it "handles non-ASCII-name methods" do
+      expect(instance.☃).to eq(instance.☃)
     end
 
     it "returns the name of the method" do
