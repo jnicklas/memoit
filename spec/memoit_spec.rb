@@ -96,7 +96,6 @@ describe Memoit do
 
       expect(Foo.new.cname).to eq("Foo")
       expect(Bar.new.cname).to eq("Bar")
-
     end
   end
 
