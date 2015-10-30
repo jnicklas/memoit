@@ -78,6 +78,25 @@ describe Memoit do
       end
       expect(name).to eq(:blah)
     end
+
+    it "works in a mixin" do
+      mod = Module.new do
+        memoize def cname
+          self.class.name
+        end
+      end
+
+      Foo = Class.new do
+        include mod
+      end
+
+      Bar = Class.new do
+        include mod
+      end
+
+      expect(Foo.new.cname).to eq("Foo")
+      expect(Bar.new.cname).to eq("Bar")
+    end
   end
 
   describe ".memoize_class_method" do
