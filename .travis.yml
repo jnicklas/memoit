@@ -1,0 +1,22 @@
+language: ruby
+
+rvm:
+  - 2.1
+  - 2.2
+  - ruby-head
+  - jruby-9.0.1.0
+
+gemfile:
+  - Gemfile
+
+cache: bundler
+
+sudo: false
+
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+
+matrix:
+  allow_failures:
+    - rvm: ruby-head
