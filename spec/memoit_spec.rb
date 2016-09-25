@@ -1,107 +1,121 @@
 require "memoit"
+require "support/shared_examples/memoizer"
 
 describe Memoit do
-  let(:klass) do
-    Class.new do
-      memoize_class_method def self.foo
-        rand
+  context "with method prefix notation" do
+    let(:klass) do
+      Class.new do
+        memoize_class_method def self.foo
+          rand
+        end
+
+        memoize def foo
+          rand
+        end
+
+        memoize def bar(*values)
+          rand
+        end
+
+        memoize def falsy
+          foo
+          false
+        end
+
+        memoize def query?
+          rand
+        end
+
+        memoize def bang!
+          rand
+        end
+
+        memoize def ☃
+          rand
+        end
       end
-
-      memoize def foo
-        rand
-      end
-
-      memoize def bar(*values)
-        rand
-      end
-
-      memoize def falsy
-        foo
-        false
-      end
-
-      memoize def query?
-        rand
-      end
-
-      memoize def bang!
-        rand
-      end
-
-      memoize def ☃
-        rand
-      end
-    end
-  end
-  let(:instance) { klass.new }
-
-  describe ".memoize" do
-    it "caches result" do
-      expect(instance.foo).to eq(instance.foo)
     end
 
-    it "caches results for different parameters" do
-      a = Object.new
-      expect(instance.bar(1)).to eq(instance.bar(1))
-      expect(instance.bar(2)).to eq(instance.bar(2))
-      expect(instance.bar(a, 1, :foo, "bar")).to eq(instance.bar(a, 1, :foo, "bar"))
-      expect(instance.bar(2)).not_to eq(instance.bar(1))
-      expect(instance.bar(a, 1, :foo, "bar")).not_to eq(instance.bar(Object.new, 1, :foo, "bar"))
-    end
-
-    it "ignores cache when block given" do
-      expect(instance.foo { }).not_to eq(instance.foo { })
-    end
-
-    it "caches falsy values" do
-      expect(instance).to receive(:foo).once
-      expect(instance.falsy).to eq(instance.falsy)
-    end
-
-    it "handles question-mark methods" do
-      expect(instance.query?).to eq(instance.query?)
-    end
-
-    it "handles bang methods" do
-      expect(instance.bang!).to eq(instance.bang!)
-    end
-
-    it "handles non-ASCII-name methods" do
-      expect(instance.☃).to eq(instance.☃)
-    end
+    it_behaves_like "memoizer"
 
     it "returns the name of the method" do
       name = nil
       Class.new do
-        name = memoize def blah
-        end
+        name = memoize def blah; end
       end
       expect(name).to eq(:blah)
     end
+  end
 
-    it "works in a mixin" do
-      mod = Module.new do
-        memoize def cname
-          self.class.name
+  context "with standalone notation" do
+    let(:klass) do
+      Class.new do
+        def self.foo
+          rand
         end
-      end
+        memoize_class_method :foo
 
-      Foo = Class.new do
-        include mod
-      end
+        def foo
+          rand
+        end
+        memoize :foo
 
-      Bar = Class.new do
-        include mod
-      end
+        def bar(*values)
+          rand
+        end
+        memoize :bar
 
-      expect(Foo.new.cname).to eq("Foo")
-      expect(Bar.new.cname).to eq("Bar")
+        def falsy
+          foo
+          false
+        end
+        memoize :falsy
+
+        def query?
+          rand
+        end
+        memoize :query?
+
+        def bang!
+          rand
+        end
+        memoize :bang!
+
+        def ☃
+          rand
+        end
+        memoize :☃
+      end
+    end
+
+    it_behaves_like "memoizer"
+
+    it "returns the name of the method" do
+      name = nil
+      Class.new do
+        def blah; end
+        name = memoize :blah
+      end
+      expect(name).to eq(:blah)
     end
   end
 
-  describe ".memoize_class_method" do
-    it "caches result" do
-      expect(klass.foo).to eq(klass.foo)
+  it "works in a mixin" do
+    mod = Module.new do
+      memoize def cname
+        self.class.name
+      end
     end
+
+    Foo = Class.new do
+      include mod
+    end
+
+    Bar = Class.new do
+      include mod
+    end
+
+    expect(Foo.new.cname).to eq("Foo")
+    expect(Bar.new.cname).to eq("Bar")
   end
 end
