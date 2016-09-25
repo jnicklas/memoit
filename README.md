@@ -27,6 +27,22 @@ class Foo
 end
 ```
 
+You can also use the more familiar, standalone notation:
+
+``` ruby
+class Foo
+  def bar(value)
+    expensive_calculation(value)
+  end
+  memoize :bar
+
+  def self.baz(value)
+    expensive_calculation(value)
+  end
+  memoize_class_method :baz
+end
+```
+
 ## Is it any good?
 
 [Yes](https://news.ycombinator.com/item?id=3067434).
