@@ -1,6 +1,11 @@
 require "memoit/version"
 
 module Memoit
+  def self.extended(klass)
+    unless klass.singleton_class?
+      klass.singleton_class.extend(self)
+    end
+  end
 
   # Memoize the method with the given name.
   #
@@ -36,5 +41,3 @@ module Memoit
     singleton_class.memoize(name)
   end
 end
-
-Module.send(:include, Memoit)

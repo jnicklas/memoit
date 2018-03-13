@@ -1,6 +1,8 @@
-require "memoit"
+describe Memoit, "as core extension" do
+  before :all do
+    require "memoit/core_ext"
+  end
 
-describe Memoit do
   let(:klass) do
     Class.new do
       memoize_class_method def self.foo
@@ -73,6 +75,8 @@ describe Memoit do
     it "returns the name of the method" do
       name = nil
       Class.new do
+        extend Memoit
+
         name = memoize def blah
         end
       end
@@ -80,22 +84,26 @@ describe Memoit do
     end
 
     it "works in a mixin" do
-      mod = Module.new do
-        memoize def cname
-          self.class.name
+      module Test
+        Mod = Module.new do
+          extend Memoit
+
+          memoize def cname
+            self.class.name
+          end
+        end
+
+        Foo = Class.new do
+          include Mod
+        end
+
+        Bar = Class.new do
+          include Mod
         end
       end
 
-      Foo = Class.new do
-        include mod
-      end
-
-      Bar = Class.new do
-        include mod
-      end
-
-      expect(Foo.new.cname).to eq("Foo")
-      expect(Bar.new.cname).to eq("Bar")
+      expect(Test::Foo.new.cname).to eq("Test::Foo")
+      expect(Test::Bar.new.cname).to eq("Test::Bar")
     end
   end
 
