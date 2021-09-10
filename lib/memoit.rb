@@ -14,10 +14,10 @@ module Memoit
     ivar_method_name = name.to_s.sub("?", "__questionmark").sub("!", "__bang")
     ivar_name = "@_memo_#{ivar_method_name}".to_sym
     mod = Module.new do
-      define_method(name) do |*args, &block|
-        return super(*args, &block) if block
+      define_method(name) do |*args, **kwargs, &block|
+        return super(*args, **kwargs, &block) if block
         cache = instance_variable_get(ivar_name) || instance_variable_set(ivar_name, {})
-        cache.fetch(args.hash) { |hash| cache[hash] = super(*args) }
+        cache.fetch(args.hash) { |hash| cache[hash] = super(*args, **kwargs) }
       end
     end
     prepend mod

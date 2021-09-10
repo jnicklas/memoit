@@ -31,6 +31,14 @@ end
 
 [Yes](https://news.ycombinator.com/item?id=3067434).
 
+## Development
+
+```sh
+gem install bundler
+bundle install
+rspec
+```
+
 ## License
 
 [MIT](LICENSE.txt)
