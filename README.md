@@ -1,7 +1,7 @@
 # Memoit
 
 [![Gem Version](https://badge.fury.io/rb/memoit.svg)](http://badge.fury.io/rb/memoit)
-[![Build Status](https://travis-ci.org/jnicklas/memoit.svg?branch=master)](https://travis-ci.org/jnicklas/memoit)
+[![Build Status](https://github.com/jnicklas/memoit/actions/workflows/ci.yml/badge.svg)](https://github.com/jnicklas/memoit/actions/workflows/ci.yml)
 
 Memoizes methods.
 
