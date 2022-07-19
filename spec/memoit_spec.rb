@@ -15,6 +15,22 @@ describe Memoit do
         rand
       end
 
+      memoize def baz(pos = nil, hash = {}, kwak: nil)
+        rand
+      end
+
+      memoize def qux(pos = nil, kwak: nil)
+        rand
+      end
+
+      memoize def quux(kwak: nil)
+        rand
+      end
+
+      memoize def corge(hash = {}, kwak: nil)
+        rand
+      end
+
       memoize def falsy
         foo
         false
@@ -47,6 +63,24 @@ describe Memoit do
       expect(instance.bar(a, 1, :foo, "bar")).to eq(instance.bar(a, 1, :foo, "bar"))
       expect(instance.bar(2)).not_to eq(instance.bar(1))
       expect(instance.bar(a, 1, :foo, "bar")).not_to eq(instance.bar(Object.new, 1, :foo, "bar"))
+    end
+
+    it "caches results when positional, hash and keyword arguments are used" do
+      a = Object.new
+      expect(instance.baz(a, { hash_key: "hash_value" }, kwak: "kwav")).to eq(instance.baz(a, { hash_key: "hash_value" }, kwak: "kwav"))
+    end
+
+    it "caches results when positional and keyword arguments are used" do
+      a = Object.new
+      expect(instance.qux(a, kwak: "kwav")).to eq(instance.qux(a, kwak: "kwav"))
+    end
+
+    it "caches results when keyword arguments are used" do
+      expect(instance.quux(kwak: "kwav")).to eq(instance.quux(kwak: "kwav"))
+    end
+
+    it "caches results when hash and keyword arguments are used" do
+      expect(instance.corge({ hash_key: "hash_value" }, kwak: "kwav")).to eq(instance.corge({ hash_key: "hash_value" }, kwak: "kwav"))
     end
 
     it "ignores cache when block given" do
