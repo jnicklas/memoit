@@ -79,6 +79,10 @@ describe Memoit do
       expect(instance.quux(kwak: "kwav")).to eq(instance.quux(kwak: "kwav"))
     end
 
+    it "ignores cache if keyword arguments differ" do
+      expect(instance.quux(kwak: "1")).not_to eq(instance.quux(kwak: "2"))
+    end
+
     it "caches results when hash and keyword arguments are used" do
       expect(instance.corge({ hash_key: "hash_value" }, kwak: "kwav")).to eq(instance.corge({ hash_key: "hash_value" }, kwak: "kwav"))
     end
