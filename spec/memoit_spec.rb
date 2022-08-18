@@ -11,6 +11,10 @@ describe Memoit do
         rand
       end
 
+      memoize def single_param(object)
+        object
+      end
+
       memoize def bar(*values)
         rand
       end
@@ -54,6 +58,12 @@ describe Memoit do
   describe ".memoize" do
     it "caches result" do
       expect(instance.foo).to eq(instance.foo)
+    end
+
+    it "does not convert objects to a hash implicitly" do
+      object = double(to_hash: {})
+
+      expect(instance.single_param(object)).to eq(object)
     end
 
     it "caches results for different parameters" do
