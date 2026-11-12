@@ -47,6 +47,22 @@ describe Memoit do
       memoize def ☃
         rand
       end
+
+      def call_protected_method(other)
+        other.protected_method
+      end
+
+      protected
+
+      memoize def protected_method
+        rand
+      end
+
+      private
+
+      memoize def private_method
+        rand
+      end
     end
   end
   let(:instance) { klass.new }
@@ -106,6 +122,22 @@ describe Memoit do
 
     it "handles non-ASCII-name methods" do
       expect(instance.☃).to eq(instance.☃)
+    end
+
+    it "keeps public methods public" do
+      expect(klass.public_method_defined?(:foo)).to eq(true)
+    end
+
+    it "keeps protected methods protected" do
+      expect(klass.protected_method_defined?(:protected_method)).to eq(true)
+      expect(instance.call_protected_method(instance)).to eq(instance.call_protected_method(instance))
+      expect { instance.protected_method }.to raise_error(NoMethodError)
+    end
+
+    it "keeps private methods private" do
+      expect(klass.private_method_defined?(:private_method)).to eq(true)
+      expect(instance.send(:private_method)).to eq(instance.send(:private_method))
+      expect { instance.private_method }.to raise_error(NoMethodError)
     end
 
     it "returns the name of the method" do

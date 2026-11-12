@@ -13,12 +13,21 @@ module Memoit
   def memoize(name)
     ivar_method_name = name.to_s.sub("?", "__questionmark").sub("!", "__bang")
     ivar_name = "@_memo_#{ivar_method_name}".to_sym
+    visibility =
+      if private_method_defined?(name)
+        :private
+      elsif protected_method_defined?(name)
+        :protected
+      else
+        :public
+      end
     mod = Module.new do
       define_method(name) do |*args, **kwargs, &block|
         return super(*args, **kwargs, &block) if block
         cache = instance_variable_get(ivar_name) || instance_variable_set(ivar_name, {})
         cache.fetch([args, kwargs].hash) { |hash| cache[hash] = super(*args, **kwargs) }
       end
+      send(visibility, name)
     end
     prepend mod
     name
